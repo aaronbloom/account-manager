@@ -4,12 +4,13 @@ import com.acmebank.api.response.AccountBalanceResponse;
 import com.acmebank.bank.BankManager;
 import io.javalin.core.validation.Validator;
 import io.javalin.http.Context;
-import io.javalin.plugin.json.JavalinJson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.math.BigDecimal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class AccountControllerTest {
@@ -36,7 +37,11 @@ class AccountControllerTest {
         accountController.getBalance(ctx);
 
         verify(bankManager).getAccountBalance(eq("1234567"));
-        final String expectedBody = JavalinJson.toJson(new AccountBalanceResponse("1234567", new BigDecimal(42)));
-        verify(ctx).json(eq(expectedBody));
+
+        final ArgumentCaptor<AccountBalanceResponse> argumentCaptor = ArgumentCaptor.forClass(AccountBalanceResponse.class);
+        verify(ctx, times(1)).json(argumentCaptor.capture());
+
+        assertEquals("1234567", argumentCaptor.getValue().getAccountId(), "Should be correct account ID");
+        assertEquals(new BigDecimal(42), argumentCaptor.getValue().getBalance(), "Should be correct balance for account");
     }
 }
