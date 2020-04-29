@@ -30,7 +30,7 @@ public class AccountRepository {
                     } else {
                         final String message = String.format("Could not find account '%s'", accountId);
                         logger.warn(message);
-                        throw new AccountNotFoundException(message);
+                        throw new AccountNotFoundException(message, accountId);
                     }
                 }
             }

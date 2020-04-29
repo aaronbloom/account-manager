@@ -1,7 +1,14 @@
 package com.acmebank.exception;
 
 public class AccountNotFoundException extends Exception {
-    public AccountNotFoundException(final String message) {
+    private final String accountId;
+
+    public AccountNotFoundException(final String message, final String accountId) {
         super(message);
+        this.accountId = accountId;
+    }
+
+    public String getAccountId() {
+        return accountId;
     }
 }
