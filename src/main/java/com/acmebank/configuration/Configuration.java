@@ -38,4 +38,35 @@ public class Configuration {
     public String getH2DatabaseConnectionPassword() {
         return h2DatabaseConnectionPassword;
     }
+
+    public static Configuration fromEnvironment() {
+        final Configuration configuration = new Configuration();
+
+        final String accountManagerPort = System.getenv("ACCOUNT_MANAGER_PORT");
+        if (isEnvironmentVariableSet(accountManagerPort)) {
+            final int port = Integer.parseInt(accountManagerPort);
+            configuration.setHttpPort(port);
+        }
+
+        final String accountManagerH2Url = System.getenv("ACCOUNT_MANAGER_H2_URL");
+        if (isEnvironmentVariableSet(accountManagerH2Url)) {
+            configuration.setH2DatabaseConnectionUrl(accountManagerH2Url);
+        }
+
+        final String accountManagerH2UserName = System.getenv("ACCOUNT_MANAGER_H2_USERNAME");
+        if (isEnvironmentVariableSet(accountManagerH2UserName)) {
+            configuration.setH2DatabaseConnectionUserName(accountManagerH2UserName);
+        }
+
+        final String accountManagerH2Password = System.getenv("ACCOUNT_MANAGER_H2_PASSWORD");
+        if (isEnvironmentVariableSet(accountManagerH2Password)) {
+            configuration.setH2DatabaseConnectionPassword(accountManagerH2Password);
+        }
+
+        return configuration;
+    }
+
+    private static boolean isEnvironmentVariableSet(final String value) {
+        return value != null && !value.equals("");
+    }
 }

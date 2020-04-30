@@ -11,15 +11,11 @@ public class Application {
     public static void main(final String[] args) throws ApplicationStartupException {
         logger.info("Starting account-manager.");
 
-        final Configuration configuration = getConfiguration();
+        final Configuration configuration = Configuration.fromEnvironment();
 
         final Startup startup = new Startup(configuration);
 
         startup.start();
-    }
-
-    public static Configuration getConfiguration() {
-        return new Configuration(); // TODO source configuration from the environment
     }
 
 }

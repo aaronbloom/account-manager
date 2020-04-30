@@ -29,10 +29,10 @@ public class AccountController {
             final BigDecimal balance = bankManager.getAccountBalance(accountId);
             ctx.json(new AccountBalanceResponse(accountId, balance));
         } catch (final AccountNotFoundException e) {
-            logger.warn("Unable to handle request", e);
+            logger.warn("Unable to handle request");
             ctx.status(404).result(String.format("Account not found '%s'", e.getAccountId()));
         } catch (final RepositoryException e) {
-            logger.warn("Unable to handle request", e);
+            logger.error("Unable to handle request", e);
             ctx.status(500).result("Unable to facilitate request");
         }
     }
@@ -53,13 +53,13 @@ public class AccountController {
             bankManager.transfer(accountId, targetAccountId, amount);
             ctx.status(200);
         } catch (final AccountNotFoundException e) {
-            logger.warn("Unable to handle request", e);
+            logger.warn("Unable to handle request");
             ctx.status(404).result(String.format("Account not found '%s'", e.getAccountId()));
         } catch (final RepositoryException e) {
-            logger.warn("Unable to handle request", e);
+            logger.error("Unable to handle request", e);
             ctx.status(500).result("Unable to facilitate request");
         } catch (final AccountOperationException e) {
-            logger.warn("Unable to handle request", e);
+            logger.warn("Unable to handle request");
             ctx.status(400).result("Invalid request state");
         }
     }
