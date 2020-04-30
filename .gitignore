@@ -1,3 +1,6 @@
+# Local H2 database files
+database/*.db
+
 # Java
 *.class
 *.jar
