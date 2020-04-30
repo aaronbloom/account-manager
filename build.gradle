@@ -34,5 +34,5 @@ test {
 
 task run(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
-    main = "com.acmebank.Application"
+    main = "com.acmebank.accountmanager.Application"
 }

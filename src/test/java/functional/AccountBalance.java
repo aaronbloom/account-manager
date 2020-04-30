@@ -1,8 +1,8 @@
 package functional;
 
-import com.acmebank.Startup;
-import com.acmebank.api.response.AccountBalanceResponse;
-import com.acmebank.configuration.Configuration;
+import com.acmebank.accountmanager.Startup;
+import com.acmebank.accountmanager.api.response.AccountBalanceResponse;
+import com.acmebank.accountmanager.configuration.Configuration;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import io.javalin.plugin.json.JavalinJson;
