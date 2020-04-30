@@ -12,22 +12,27 @@ repositories {
 
 dependencies {
     // Application
-    compile group: 'io.javalin', name: 'javalin', version: '3.8.0'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
-    compile group: 'com.h2database', name: 'h2', version: '1.4.200'
+    implementation group: 'io.javalin', name: 'javalin', version: '3.8.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
+    implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 
     // Logging
-    compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 
     // Testing
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.2'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.2'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
-    testCompile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
+    testImplementation group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
 }
 
 test {
     useJUnitPlatform()
+}
+
+task run(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "com.acmebank.Application"
 }
