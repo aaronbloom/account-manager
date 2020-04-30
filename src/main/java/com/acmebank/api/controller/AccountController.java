@@ -5,7 +5,6 @@ import com.acmebank.bank.BankManager;
 import com.acmebank.exception.AccountNotFoundException;
 import com.acmebank.exception.AccountOperationException;
 import com.acmebank.exception.RepositoryException;
-import io.javalin.core.validation.Validator;
 import io.javalin.http.Context;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.Logger;
@@ -22,10 +21,8 @@ public class AccountController {
     }
 
     public void getBalance(final Context ctx) {
-        final Validator<String> validator = ctx.queryParam("accountId", String.class);
-        final Validator<String> check = validator
-                .check(x -> !StringUtil.isEmpty(x), "accountId parameter cannot be missing");
-        final String accountId = check
+        final String accountId = ctx.pathParam("accountId", String.class)
+                .check(x -> !StringUtil.isEmpty(x), "accountId parameter cannot be missing")
                 .get();
 
         try {
@@ -41,14 +38,14 @@ public class AccountController {
     }
 
     public void transfer(final Context ctx) {
-        final String accountId = ctx.queryParam("accountId", String.class)
+        final String accountId = ctx.pathParam("accountId", String.class)
                 .check(x -> !StringUtil.isEmpty(x), "accountId parameter cannot be missing")
                 .get();
-        final String targetAccountId = ctx.queryParam("targetAccountId", String.class)
+        final String targetAccountId = ctx.pathParam("targetAccountId", String.class)
                 .check(x -> !StringUtil.isEmpty(x), "targetAccountId parameter cannot be missing")
                 .check(x -> !accountId.equals(x), "accountId and targetAccountId cannot be the same")
                 .get();
-        final BigDecimal amount = ctx.queryParam("amount", BigDecimal.class)
+        final BigDecimal amount = ctx.pathParam("amount", BigDecimal.class)
                 .check(x -> x.compareTo(BigDecimal.ZERO) > 0, "amount parameter must be greater than zero")
                 .get();
 

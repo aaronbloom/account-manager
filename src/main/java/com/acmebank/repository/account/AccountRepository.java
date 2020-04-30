@@ -42,8 +42,20 @@ public class AccountRepository {
     }
 
     public void updateBalance(final List<BalanceUpdate> balanceUpdates) throws RepositoryException {
-        final Connection connection = h2Connection.getConnection();
+        if (balanceUpdates.size() == 0) {
+            return;
+        }
         try {
+            transaction(balanceUpdates);
+        } catch (final SQLException e) {
+            final String message = "Unable to update account, was unable to finish connection";
+            logger.error(message, e);
+            throw new RepositoryException(message, e);
+        }
+    }
+
+    private void transaction(final List<BalanceUpdate> balanceUpdates) throws RepositoryException, SQLException {
+        try (final Connection connection = h2Connection.getConnection()) {
             try {
                 // Apply multiple updates in one transaction
                 connection.setAutoCommit(false);
@@ -52,22 +64,21 @@ public class AccountRepository {
             } catch (final SQLException commitException) {
                 final String message = "Unable to update account";
                 logger.error(message, commitException);
-                try {
-                    connection.rollback();
-                } catch (final SQLException rollbackException) {
-                    final String rollbackMessage = "Unable to update account, was unable to rollback change";
-                    logger.error(rollbackMessage, rollbackException);
-                    throw new RepositoryException(rollbackMessage, rollbackException);
-                }
+                rollback(connection);
                 throw new RepositoryException(message, commitException);
             } finally {
                 connection.setAutoCommit(true);
-                connection.close();
             }
-        } catch (final SQLException e) {
-            final String message = "Unable to update account, was unable to finish connection";
-            logger.error(message, e);
-            throw new RepositoryException(message, e);
+        }
+    }
+
+    private void rollback(final Connection connection) throws RepositoryException {
+        try {
+            connection.rollback();
+        } catch (final SQLException rollbackException) {
+            final String rollbackMessage = "Unable to update account, was unable to rollback change";
+            logger.error(rollbackMessage, rollbackException);
+            throw new RepositoryException(rollbackMessage, rollbackException);
         }
     }
 

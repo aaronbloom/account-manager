@@ -9,9 +9,7 @@ import org.mockito.ArgumentCaptor;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Matchers.eq;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BankManagerTest {
@@ -37,7 +35,7 @@ class BankManagerTest {
         assertThrows(AccountOperationException.class,
                 () -> bankManager.transfer("123", "123", new BigDecimal(42)));
 
-        verifyZeroInteractions(accountRepository);
+        verifyNoMoreInteractions(accountRepository);
     }
 
     @Test
@@ -65,5 +63,24 @@ class BankManagerTest {
         assertEquals(new BigDecimal(92), secondUpdate.getBalance(), "Should have correct new balance");
     }
 
+    @Test
+    void shouldNotTransferMoreThanIsInFromBalance() throws Exception {
+        final AccountRepository accountRepository = mock(AccountRepository.class);
+        when(accountRepository.getBalance("123")).thenReturn(new BigDecimal(150));
+        final BankManager bankManager = new BankManager(accountRepository);
+
+        assertThrows(AccountOperationException.class,
+                () -> bankManager.transfer("123", "555", new BigDecimal(200)));
+    }
+
+    @Test
+    void shouldTransferExactlySameAmountAsFromBalanceSuccessfully() throws Exception {
+        final AccountRepository accountRepository = mock(AccountRepository.class);
+        when(accountRepository.getBalance("123")).thenReturn(new BigDecimal(150));
+        when(accountRepository.getBalance("555")).thenReturn(new BigDecimal(10));
+        final BankManager bankManager = new BankManager(accountRepository);
+
+        assertDoesNotThrow(() -> bankManager.transfer("123", "555", new BigDecimal(150)));
+    }
 
 }

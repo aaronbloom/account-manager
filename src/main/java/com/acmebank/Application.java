@@ -19,7 +19,7 @@ public class Application {
     }
 
     public static Configuration getConfiguration() {
-        return new Configuration();
+        return new Configuration(); // TODO source configuration from the environment
     }
 
 }

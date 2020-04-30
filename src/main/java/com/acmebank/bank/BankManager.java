@@ -31,11 +31,14 @@ public class BankManager {
                          final String targetAccountId,
                          final BigDecimal amount) throws AccountNotFoundException, RepositoryException, AccountOperationException {
         if (fromAccountId.equals(targetAccountId)) {
-            throw new AccountOperationException("Cannot transfer between the same accounts");
+            throw new AccountOperationException("Cannot transfer between the same accounts", fromAccountId);
         }
 
         synchronized (TRANSFER_LOCK) {
             final BigDecimal fromBalance = accountRepository.getBalance(fromAccountId);
+            if (fromBalance.compareTo(amount) < 0) {
+                throw new AccountOperationException("", fromAccountId);
+            }
             final BigDecimal targetBalance = accountRepository.getBalance(targetAccountId);
 
             final BigDecimal newFromBalance = fromBalance.subtract(amount);

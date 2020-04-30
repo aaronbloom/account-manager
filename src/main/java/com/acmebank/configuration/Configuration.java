@@ -3,7 +3,7 @@ package com.acmebank.configuration;
 public class Configuration {
     // Pre-populated with sensible default configuration
     private int httpPort = 8080;
-    private String h2DatabaseConnectionUrl = "jdbc:h2:~/account-manager-db";
+    private String h2DatabaseConnectionUrl = "jdbc:h2:./database/account-manager-db";
     private String h2DatabaseConnectionUserName = "";
     private String h2DatabaseConnectionPassword = "";
 

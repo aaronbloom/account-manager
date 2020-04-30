@@ -2,16 +2,21 @@ package com.acmebank.repository.instance;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.sql.Connection;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class H2ConnectionTest {
 
     @Test
-    void shouldGetConnection() {
-        final H2Connection h2Connection = new H2Connection("jdbc:h2:~/test", "admin", "admin");
+    void canGetH2Connection() {
+        final H2Connection h2Connection = new H2Connection("jdbc:h2:mem:test-db-memory", "admin", "admin");
 
-//        h2Connection.getConnection();
-
-        // TODO - perhaps have driver manager as a dependency
+        assertDoesNotThrow(() -> {
+            try (final Connection connection = h2Connection.getConnection()) {
+                assertTrue(connection.isValid(30), "Connection should be valid");
+            }
+        });
     }
 }
